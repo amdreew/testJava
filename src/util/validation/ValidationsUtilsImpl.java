@@ -1,4 +1,4 @@
-package validation;
+package util.validation;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,8 +7,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import dto.ValidationFormatNumberDTO;
-import exeption.ParamsInvalidException;
+import app.dto.ValidationFormatNumberDTO;
+import util.exeption.ParamsInvalidException;
 import util.Notification;
 import util.Response;
 import util.TypeResponse;

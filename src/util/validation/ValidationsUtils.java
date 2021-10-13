@@ -1,6 +1,6 @@
-package validation;
+package util.validation;
 
-import dto.ValidationFormatNumberDTO;
+import app.dto.ValidationFormatNumberDTO;
 import util.Response;
 
 public interface ValidationsUtils {

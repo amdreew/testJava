@@ -10,12 +10,6 @@ public class Response<T> {
 	}
 
 
-	public Response(T data, Notification notification) {
-		this.data = data;
-		this.notification = notification;
-	}
-
-
 	public T getData() {
 		return data;
 	}

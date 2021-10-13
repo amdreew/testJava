@@ -1,17 +1,9 @@
 package util;
 
-import java.time.LocalDateTime;
-
 public class Notification {
 	private String description;
     private String responseTime;
     private TypeResponse code;
-
-    public Notification(String decription, TypeResponse code) {
-        this.description = decription;
-        this.code = code;
-        this.responseTime = LocalDateTime.now().toString();
-    }
 
 	public Notification() {
 	}
