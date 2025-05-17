@@ -1,54 +1,56 @@
-ORG 1000
-
-INICIO:  LDA MENU_OPCION
-         CALL MOSTRAR_MENU
-         CALL LEER_OPCION
-         BRZ INICIO ; repetir si opción es cero
-
-         ; Evaluar opción ingresada
-         SUB #51
-         BRZ NOMBRE_ESTUDIANTES
-         SUB #1
-         BRZ ORDENAR_NUMEROS
-         SUB #1
-         BRZ PROMEDIO
-         SUB #1
-         BRZ DEPORTE
-         SUB #1
-         BRZ SALIR
-         JMP INICIO
-
-; -------------------------------------
-MOSTRAR_MENU:
-         OUT "Menu de Opciones"
-         OUT "51. Nombre Completo de los Estudiantes"
-         OUT "52. Ordenar y mostrar en orden descendente dos numeros"
-         OUT "53. Promedio de 5 numeros (coma flotante)"
-         OUT "54. Deporte Favorito"
+ORG 100
+; Mostrar menú
+INICIO:  OUT "51. Nombre de los estudiantes"
+         OUT "52. Ordenar dos numeros"
+         OUT "53. Promedio de 5 numeros"
+         OUT "54. Deporte favorito"
          OUT "55. Salir"
-         RET
+         IN
+         STA OPCION
+         
+         ; Comparar con 51
+         LDA OPCION
+         SUB #51
+         BRZ NOM
 
-LEER_OPCION:
-         IN OPCION
-         STA MENU_OPCION
-         RET
+         ; Comparar con 52
+         LDA OPCION
+         SUB #52
+         BRZ ORDENAR
 
-; -------------------------------------
-NOMBRE_ESTUDIANTES:
-         OUT "Miguel Andres Opsino Gutierrez"
-         OUT "Otro Estudiante (si aplica)"
+         ; Comparar con 53
+         LDA OPCION
+         SUB #53
+         BRZ PROMEDIO
+
+         ; Comparar con 54
+         LDA OPCION
+         SUB #54
+         BRZ DEPORTE
+
+         ; Comparar con 55
+         LDA OPCION
+         SUB #55
+         BRZ SALIR
+
          JMP INICIO
 
-; -------------------------------------
-ORDENAR_NUMEROS:
-         OUT "Ingrese el primer numero:"
-         IN NUM1
-         OUT "Ingrese el segundo numero:"
-         IN NUM2
+; -------------------------
+NOM:     OUT "Miguel Andres Opsino Gutierrez"
+         OUT "Segundo Estudiante"
+         JMP INICIO
+
+; -------------------------
+ORDENAR: OUT "Ingrese primer numero:"
+         IN
+         STA NUM1
+         OUT "Ingrese segundo numero:"
+         IN
+         STA NUM2
 
          LDA NUM1
          SUB NUM2
-         BRP MAYOR_O_IGUAL
+         BRP IMPRIME_ORDEN ; num1 >= num2
 
          ; Intercambiar si num2 > num1
          LDA NUM1
@@ -58,62 +60,57 @@ ORDENAR_NUMEROS:
          LDA TEMP
          STA NUM2
 
-MAYOR_O_IGUAL:
-         OUT "Numeros en orden descendente:"
-         OUT NUM1
-         OUT NUM2
+IMPRIME_ORDEN:
+         OUT "Orden descendente:"
+         LDA NUM1
+         OUT
+         LDA NUM2
+         OUT
          JMP INICIO
 
-; -------------------------------------
+; -------------------------
 PROMEDIO:
-         OUT "Ingrese 5 numeros (con coma flotante):"
-         LDF #0.0
-         STF SUMA
-
          LDA #0
+         STA SUMA
          STA CONTADOR
 
-LECTURA:
-         INDF NUMF
-         LDF SUMA
-         ADDF NUMF
-         STF SUMA
+LEER_NUM:
+         OUT "Ingrese un numero:"
+         IN
+         ADD SUMA
+         STA SUMA
 
          LDA CONTADOR
          ADD #1
          STA CONTADOR
          SUB #5
-         BRZ CALCULAR_PROMEDIO
-         JMP LECTURA
+         BRZ CALCULAR
+         JMP LEER_NUM
 
-CALCULAR_PROMEDIO:
-         LDF SUMA
-         DIVF #5.0
-         STF PROMEDIOF
-         OUT "El promedio es:"
-         OUT PROMEDIOF
+CALCULAR:
+         LDA SUMA
+         DIV #5
+         OUT "Promedio:"
+         OUT
          JMP INICIO
 
-; -------------------------------------
+; -------------------------
 DEPORTE:
-         OUT "Mi deporte favorito es: Futbol"
+         OUT "Futbol"
          JMP INICIO
 
-; -------------------------------------
+; -------------------------
 SALIR:
-         OUT "Saliendo del programa..."
+         OUT "Fin del programa"
          HLT
 
-; -------------------------------------
+; -------------------------
 ; Variables
-OPCION:         DW 0
-MENU_OPCION:    DW 0
-NUM1:           DW 0
-NUM2:           DW 0
-TEMP:           DW 0
-NUMF:           DWF 0.0
-SUMA:           DWF 0.0
-PROMEDIOF:      DWF 0.0
-CONTADOR:       DW 0
+OPCION:    DW 0
+NUM1:      DW 0
+NUM2:      DW 0
+TEMP:      DW 0
+SUMA:      DW 0
+CONTADOR:  DW 0
 
 END INICIO
