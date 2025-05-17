@@ -1,0 +1,119 @@
+ORG 1000
+
+INICIO:  LDA MENU_OPCION
+         CALL MOSTRAR_MENU
+         CALL LEER_OPCION
+         BRZ INICIO ; repetir si opción es cero
+
+         ; Evaluar opción ingresada
+         SUB #51
+         BRZ NOMBRE_ESTUDIANTES
+         SUB #1
+         BRZ ORDENAR_NUMEROS
+         SUB #1
+         BRZ PROMEDIO
+         SUB #1
+         BRZ DEPORTE
+         SUB #1
+         BRZ SALIR
+         JMP INICIO
+
+; -------------------------------------
+MOSTRAR_MENU:
+         OUT "Menu de Opciones"
+         OUT "51. Nombre Completo de los Estudiantes"
+         OUT "52. Ordenar y mostrar en orden descendente dos numeros"
+         OUT "53. Promedio de 5 numeros (coma flotante)"
+         OUT "54. Deporte Favorito"
+         OUT "55. Salir"
+         RET
+
+LEER_OPCION:
+         IN OPCION
+         STA MENU_OPCION
+         RET
+
+; -------------------------------------
+NOMBRE_ESTUDIANTES:
+         OUT "Miguel Andres Opsino Gutierrez"
+         OUT "Otro Estudiante (si aplica)"
+         JMP INICIO
+
+; -------------------------------------
+ORDENAR_NUMEROS:
+         OUT "Ingrese el primer numero:"
+         IN NUM1
+         OUT "Ingrese el segundo numero:"
+         IN NUM2
+
+         LDA NUM1
+         SUB NUM2
+         BRP MAYOR_O_IGUAL
+
+         ; Intercambiar si num2 > num1
+         LDA NUM1
+         STA TEMP
+         LDA NUM2
+         STA NUM1
+         LDA TEMP
+         STA NUM2
+
+MAYOR_O_IGUAL:
+         OUT "Numeros en orden descendente:"
+         OUT NUM1
+         OUT NUM2
+         JMP INICIO
+
+; -------------------------------------
+PROMEDIO:
+         OUT "Ingrese 5 numeros (con coma flotante):"
+         LDF #0.0
+         STF SUMA
+
+         LDA #0
+         STA CONTADOR
+
+LECTURA:
+         INDF NUMF
+         LDF SUMA
+         ADDF NUMF
+         STF SUMA
+
+         LDA CONTADOR
+         ADD #1
+         STA CONTADOR
+         SUB #5
+         BRZ CALCULAR_PROMEDIO
+         JMP LECTURA
+
+CALCULAR_PROMEDIO:
+         LDF SUMA
+         DIVF #5.0
+         STF PROMEDIOF
+         OUT "El promedio es:"
+         OUT PROMEDIOF
+         JMP INICIO
+
+; -------------------------------------
+DEPORTE:
+         OUT "Mi deporte favorito es: Futbol"
+         JMP INICIO
+
+; -------------------------------------
+SALIR:
+         OUT "Saliendo del programa..."
+         HLT
+
+; -------------------------------------
+; Variables
+OPCION:         DW 0
+MENU_OPCION:    DW 0
+NUM1:           DW 0
+NUM2:           DW 0
+TEMP:           DW 0
+NUMF:           DWF 0.0
+SUMA:           DWF 0.0
+PROMEDIOF:      DWF 0.0
+CONTADOR:       DW 0
+
+END INICIO
