@@ -1,116 +1,100 @@
 ORG 100
-; Mostrar menú
-INICIO:  OUT "51. Nombre de los estudiantes"
-         OUT "52. Ordenar dos numeros"
-         OUT "53. Promedio de 5 numeros"
-         OUT "54. Deporte favorito"
-         OUT "55. Salir"
-         IN
-         STA OPCION
-         
-         ; Comparar con 51
-         LDA OPCION
-         SUB #51
-         BRZ NOM
 
-         ; Comparar con 52
-         LDA OPCION
-         SUB #52
-         BRZ ORDENAR
+INICIO:     IN         ; Leer opción del menú
+            STA OPCION
 
-         ; Comparar con 53
-         LDA OPCION
-         SUB #53
-         BRZ PROMEDIO
+            LDA OPCION
+            SUB #51
+            BRZ OPCION_51
 
-         ; Comparar con 54
-         LDA OPCION
-         SUB #54
-         BRZ DEPORTE
+            LDA OPCION
+            SUB #52
+            BRZ OPCION_52
 
-         ; Comparar con 55
-         LDA OPCION
-         SUB #55
-         BRZ SALIR
+            LDA OPCION
+            SUB #53
+            BRZ OPCION_53
 
-         JMP INICIO
+            LDA OPCION
+            SUB #54
+            BRZ OPCION_54
 
-; -------------------------
-NOM:     OUT "Miguel Andres Opsino Gutierrez"
-         OUT "Segundo Estudiante"
-         JMP INICIO
+            LDA OPCION
+            SUB #55
+            BRZ OPCION_55
 
-; -------------------------
-ORDENAR: OUT "Ingrese primer numero:"
-         IN
-         STA NUM1
-         OUT "Ingrese segundo numero:"
-         IN
-         STA NUM2
+            JMP INICIO
 
-         LDA NUM1
-         SUB NUM2
-         BRP IMPRIME_ORDEN ; num1 >= num2
+; ---------------------
+OPCION_51:  LDA #1001   ; Código para nombre 1
+            OUT
+            LDA #1002   ; Código para nombre 2
+            OUT
+            JMP INICIO
 
-         ; Intercambiar si num2 > num1
-         LDA NUM1
-         STA TEMP
-         LDA NUM2
-         STA NUM1
-         LDA TEMP
-         STA NUM2
+OPCION_52:  IN          ; Número 1
+            STA NUM1
+            IN          ; Número 2
+            STA NUM2
 
-IMPRIME_ORDEN:
-         OUT "Orden descendente:"
-         LDA NUM1
-         OUT
-         LDA NUM2
-         OUT
-         JMP INICIO
+            LDA NUM1
+            SUB NUM2
+            BRP DESCENDENTE
 
-; -------------------------
-PROMEDIO:
-         LDA #0
-         STA SUMA
-         STA CONTADOR
+            ; Intercambiar
+            LDA NUM1
+            STA TEMP
+            LDA NUM2
+            STA NUM1
+            LDA TEMP
+            STA NUM2
 
-LEER_NUM:
-         OUT "Ingrese un numero:"
-         IN
-         ADD SUMA
-         STA SUMA
+DESCENDENTE:
+            LDA NUM1
+            OUT
+            LDA NUM2
+            OUT
+            JMP INICIO
 
-         LDA CONTADOR
-         ADD #1
-         STA CONTADOR
-         SUB #5
-         BRZ CALCULAR
-         JMP LEER_NUM
+; ---------------------
+OPCION_53:
+            LDA #0
+            STA SUMA
+            STA CONT
 
-CALCULAR:
-         LDA SUMA
-         DIV #5
-         OUT "Promedio:"
-         OUT
-         JMP INICIO
+LECTURA:
+            IN
+            ADD SUMA
+            STA SUMA
+            LDA CONT
+            ADD #1
+            STA CONT
+            SUB #5
+            BRZ MOSTRAR_PROM
+            JMP LECTURA
 
-; -------------------------
-DEPORTE:
-         OUT "Futbol"
-         JMP INICIO
+MOSTRAR_PROM:
+            LDA SUMA
+            DIV #5
+            OUT
+            JMP INICIO
 
-; -------------------------
-SALIR:
-         OUT "Fin del programa"
-         HLT
+; ---------------------
+OPCION_54:
+            LDA #2024   ; Código para deporte favorito
+            OUT
+            JMP INICIO
 
-; -------------------------
-; Variables
-OPCION:    DW 0
-NUM1:      DW 0
-NUM2:      DW 0
-TEMP:      DW 0
-SUMA:      DW 0
-CONTADOR:  DW 0
+; ---------------------
+OPCION_55:
+            HLT
+
+; ---------------------
+OPCION:     DW 0
+NUM1:       DW 0
+NUM2:       DW 0
+TEMP:       DW 0
+SUMA:       DW 0
+CONT:       DW 0
 
 END INICIO
